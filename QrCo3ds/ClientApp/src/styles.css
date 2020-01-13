@@ -1,0 +1,152 @@
+@import "./css/metro-all.css";
+
+.ant-btn {
+    border-radius: 0;
+}
+
+.ant-drawer-right.ant-drawer-open .ant-drawer-content-wrapper {
+    max-width: 100%;
+}
+
+.ant-input {
+    border-radius: 0;
+}
+
+.ant-pagination-item {
+    border-radius: 0;
+}
+
+.ant-pagination-prev .ant-pagination-item-link,
+.ant-pagination-next .ant-pagination-item-link {
+    border-radius: 0;
+}
+
+.ant-select-dropdown {
+    border-radius: 0;
+}
+
+.ant-select-selection {
+    border-radius: 0;
+}
+
+.ant-tabs-bar {
+    margin: 0;
+}
+
+.ant-tabs-nav .ant-tabs-tab {
+    margin: 0;
+}
+
+.ant-time-picker-input {
+    border-radius: 0;
+}
+
+.autoY {
+    overflow-y: auto;
+}
+
+.card {
+    background: white;
+}
+
+.cr {
+  width: 200px;
+  padding: 16px;
+  position: absolute;
+  text-align: center;
+  color: #f0f0f0;
+  z-index: 9;
+}
+
+.cr-right {
+    right: -50px;
+}
+
+.cr-sticky {
+  position: fixed;
+}
+
+.cr-top {
+    top: 20px;
+}
+
+.cr-top.cr-right {
+  transform: rotate(45deg);
+}
+
+.fc-button {
+    border-radius: 0;
+}
+
+.fc-event {
+    border-radius: 0;
+}
+
+.fg-transparent.ant-form-item-label label {
+    color: transparent !important;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    border-top: 1px solid rgb(232, 232, 232);
+    padding: 10px 16px;
+    text-align: right;
+    left: 0px;
+    background: #fff;
+}
+
+html {
+    -webkit-overflow-scrolling: touch;
+}
+
+.margin-left-auto {
+    margin-left: auto;
+}
+
+.margin-left-right-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.relative {
+    position: relative;
+}
+
+.w-100 > nz-picker > span.ant-calendar-picker {
+    width: 100%;
+}
+
+.w-100px {
+    width: 100px !important;
+}
+
+.w-250px {
+    width: 250px !important;
+}
+
+.w-25px {
+    width: 25px !important;
+}
+
+@media print {
+
+    .ant-table-tbody > tr > td, .ant-table-thead > tr > th {
+        border-bottom: 1px solid #989898;
+    }
+
+    .ant-table-bordered .ant-table-header > table, .ant-table-bordered .ant-table-body > table, .ant-table-bordered .ant-table-fixed-left table, .ant-table-bordered .ant-table-fixed-right table {
+        border: 1px solid #989898;
+        border-right: 0;
+        border-bottom: 0;
+    }
+
+    .ant-table-bordered .ant-table-thead > tr > th, .ant-table-bordered .ant-table-tbody > tr > td {
+        border-right: 1px solid #989898;
+    }
+
+    .screen {
+        display: none;
+    }
+}
