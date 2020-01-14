@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using QrCo3ds.Models;
+using Softveloper.IO;
 
 namespace QrCo3ds
 {
@@ -25,6 +26,7 @@ namespace QrCo3ds
 
         private static void CreateDbIfNotExists(IHost host)
         {
+            Filerectory.CreateDirectory("../Database");
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
