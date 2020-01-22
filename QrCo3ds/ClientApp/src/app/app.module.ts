@@ -8,6 +8,7 @@ import { RouterModule } from "@angular/router"
 import { NgZorroAntdModule, NZ_I18N, en_US } from "ng-zorro-antd"
 
 import { AppComponent } from "./app.component"
+import { AppService } from "./app.service"
 import { NavMenuComponent } from "./nav-menu/nav-menu.component"
 import { HomeComponent } from "./home/home.component"
 import { CounterComponent } from "./counter/counter.component"
@@ -36,6 +37,7 @@ registerLocaleData(en)
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
+    AppService,
   ],
   bootstrap: [AppComponent]
 })
