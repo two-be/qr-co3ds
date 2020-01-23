@@ -1,10 +1,11 @@
 import { registerLocaleData } from "@angular/common"
-import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http"
+import { HttpClientModule } from "@angular/common/http"
 import en from "@angular/common/locales/en"
 import { NgModule } from "@angular/core"
 import { FormsModule } from "@angular/forms"
 import { BrowserModule } from "@angular/platform-browser"
 import { RouterModule } from "@angular/router"
+import { QRCodeModule } from "angularx-qrcode"
 import { NgZorroAntdModule, NZ_I18N, en_US } from "ng-zorro-antd"
 
 import { AppComponent } from "./app.component"
@@ -22,13 +23,14 @@ registerLocaleData(en)
     NavMenuComponent,
     HomeComponent,
     CounterComponent,
-    FetchDataComponent
+    FetchDataComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: "ng-cli-universal" }),
     FormsModule,
     HttpClientModule,
     NgZorroAntdModule,
+    QRCodeModule,
     RouterModule.forRoot([
       { path: "", component: HomeComponent, pathMatch: "full" },
       { path: "counter", component: CounterComponent },

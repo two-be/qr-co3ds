@@ -34,7 +34,7 @@ namespace QrCo3ds
                 try
                 {
                     var context = services.GetRequiredService<QrCo3dsContext>();
-                    context.Database.EnsureCreated();
+                    context.Database.Migrate();
                 }
                 catch (Exception ex)
                 {

@@ -31,7 +31,7 @@ namespace QrCo3ds.Controllers
         {
             try
             {
-                return await _context.Games.ToListAsync();
+                return await _context.Games.OrderBy(x => x.ReleaseDate).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -66,7 +66,7 @@ namespace QrCo3ds.Controllers
                 };
                 var file = await System.IO.File.ReadAllBytesAsync(game.BoxArtFile);
                 Response.Headers.Add(HeaderNames.ContentDisposition, cd.ToString());
-                return File(file, mimeType);
+                return File(file, mimeType ?? "application/octet-stream");
             }
             catch (Exception ex)
             {
@@ -93,9 +93,9 @@ namespace QrCo3ds.Controllers
                     FileName = fileName,
                     Inline = true,
                 };
-                var file = await System.IO.File.ReadAllBytesAsync(game.BoxArtFile);
+                var file = await System.IO.File.ReadAllBytesAsync(game.CiaFile);
                 Response.Headers.Add(HeaderNames.ContentDisposition, cd.ToString());
-                return File(file, mimeType);
+                return File(file, mimeType ?? "application/octet-stream");
             }
             catch (Exception ex)
             {

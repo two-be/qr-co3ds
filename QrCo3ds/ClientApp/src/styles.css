@@ -46,6 +46,7 @@
 }
 
 .card {
+    border-radius: 0;
     background: white;
 }
 
@@ -108,6 +109,16 @@ html {
 .margin-left-right-auto {
     margin-left: auto;
     margin-right: auto;
+}
+
+::ng-deep .vertical-center-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+::ng-deep .vertical-center-modal .ant-modal {
+    top: 0;
 }
 
 .relative {

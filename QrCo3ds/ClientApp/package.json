@@ -22,6 +22,7 @@
     "@angular/platform-server": "8.2.12",
     "@angular/router": "8.2.12",
     "@nguniversal/module-map-ngfactory-loader": "8.1.1",
+    "angularx-qrcode": "^2.1.0",
     "aspnet-prerendering": "^3.0.1",
     "core-js": "^3.3.3",
     "jquery": "3.4.1",

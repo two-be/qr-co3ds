@@ -1,0 +1,27 @@
+<div class="bg-red fg-white" data-role="appbar" data-expand-point="md">
+  <a class="pl-2 no-hover">
+    <img src="assets/logo.png" style="width: 40px;" /> QR Co3ds
+  </a>
+
+  <ul class="app-bar-menu ml-auto">
+    <li class="no-hover pr-2">
+      <input data-role="input" data-clear-button="false" data-search-button="true" [(ngModel)]="keyword" (ngModelChange)="simpleSearch()" placeholder="Search.." style="width: 300px;" type="text" />
+    </li>
+  </ul>
+</div>
+<div class="p-2 pt-14" nz-row nzGutter="8">
+  <div *ngFor="let data of games" nz-col nzMd="4">
+    <div class="card image-header">
+      <div class="card-header fg-white" [style.background-image]="'url(' + data.boxArtUrl + ')'" style="text-shadow: 2px 2px 4px #000000;">{{data.name}}</div>
+      <div class="card-content p-2">
+        <a class="w-75" [href]="data.ciaUrl" nz-button nzType="primary" target="_blank">Download</a>
+        <button class="w-25" (click)="showModal(data)" nz-button>
+          <i nz-icon nzType="qrcode"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <nz-modal class="text-center" [nzBodyStyle]="{ padding: 0 }" nzClosable="false" [nzFooter]="null" (nzOnCancel)="handleCancel()" (nzOnOk)="handleCancel()" [nzTitle]="game.name" [(nzVisible)]="isVisible" nzWidth="300" nzWrapClassName="vertical-center-modal">
+    <qrcode errorCorrectionLevel="M" [qrdata]="qrData" width="256"></qrcode>
+  </nz-modal>
+</div>
