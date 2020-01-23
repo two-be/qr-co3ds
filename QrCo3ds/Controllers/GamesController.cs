@@ -104,6 +104,7 @@ namespace QrCo3ds.Controllers
         }
 
         [HttpPost]
+        [DisableRequestSizeLimit]
         public async Task<ActionResult<GameInfo>> Post([FromForm]GameRequest value)
         {
             try

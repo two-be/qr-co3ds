@@ -39,6 +39,8 @@ export class AppComponent {
       } else if (e instanceof HttpResponse) {
         console.log("File is completely uploaded!")
       }
+    }, err => {
+      console.log(err)
     })
   }
 }
