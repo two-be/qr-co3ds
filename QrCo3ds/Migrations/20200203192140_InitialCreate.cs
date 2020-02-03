@@ -13,8 +13,8 @@ namespace QrCo3ds.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    BoxArtFile = table.Column<string>(nullable: true),
-                    CiaFile = table.Column<string>(nullable: true),
+                    BoxArtLocalPath = table.Column<string>(nullable: true),
+                    CiaLocalPath = table.Column<string>(nullable: true),
                     Developer = table.Column<string>(nullable: true),
                     GameplayUrl = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
@@ -48,6 +48,27 @@ namespace QrCo3ds.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Dlcs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    GameId = table.Column<int>(nullable: false),
+                    LocalPath = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Dlcs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Dlcs_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Screenshots",
                 columns: table => new
                 {
@@ -56,7 +77,7 @@ namespace QrCo3ds.Migrations
                     ContentType = table.Column<string>(nullable: true),
                     FileName = table.Column<string>(nullable: true),
                     GameId = table.Column<int>(nullable: false),
-                    Path = table.Column<string>(nullable: true)
+                    LocalPath = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -75,6 +96,11 @@ namespace QrCo3ds.Migrations
                 column: "GameId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Dlcs_GameId",
+                table: "Dlcs",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Screenshots_GameId",
                 table: "Screenshots",
                 column: "GameId");
@@ -84,6 +110,9 @@ namespace QrCo3ds.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Dlcs");
 
             migrationBuilder.DropTable(
                 name: "Screenshots");

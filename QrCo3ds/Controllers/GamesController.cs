@@ -56,7 +56,7 @@ namespace QrCo3ds.Controllers
                     return BadRequest(new ExceptionInfo("That game doesn't exist.", $"GameId: {id}"));
                 }
 
-                var fileName = Path.GetFileName(game.BoxArtFile);
+                var fileName = Path.GetFileName(game.BoxArtLocalPath);
                 var provider = new FileExtensionContentTypeProvider();
                 provider.TryGetContentType(fileName, out var mimeType);
                 var cd = new ContentDisposition
@@ -64,7 +64,7 @@ namespace QrCo3ds.Controllers
                     FileName = fileName,
                     Inline = true,
                 };
-                var file = await System.IO.File.ReadAllBytesAsync(game.BoxArtFile);
+                var file = await System.IO.File.ReadAllBytesAsync(game.BoxArtLocalPath);
                 Response.Headers.Add(HeaderNames.ContentDisposition, cd.ToString());
                 return File(file, mimeType ?? "application/octet-stream");
             }
@@ -85,7 +85,7 @@ namespace QrCo3ds.Controllers
                     return BadRequest(new ExceptionInfo("That game doesn't exist.", $"GameId: {id}"));
                 }
 
-                var fileName = Path.GetFileName(game.CiaFile);
+                var fileName = Path.GetFileName(game.CiaLocalPath);
                 var provider = new FileExtensionContentTypeProvider();
                 provider.TryGetContentType(fileName, out var mimeType);
                 var cd = new ContentDisposition
@@ -93,7 +93,7 @@ namespace QrCo3ds.Controllers
                     FileName = fileName,
                     Inline = true,
                 };
-                var file = await System.IO.File.ReadAllBytesAsync(game.CiaFile);
+                var file = await System.IO.File.ReadAllBytesAsync(game.CiaLocalPath);
                 Response.Headers.Add(HeaderNames.ContentDisposition, cd.ToString());
                 return File(file, mimeType ?? "application/octet-stream");
             }
@@ -105,47 +105,88 @@ namespace QrCo3ds.Controllers
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        public async Task<ActionResult<GameInfo>> Post([FromForm]GameRequest value)
+        public async Task<ActionResult<GameInfo>> Post([FromForm]GameInfo value)
         {
             try
             {
+                var folder = value.Name;
+                Path.GetInvalidFileNameChars().ToList().ForEach(x =>
+                {
+                    folder = folder.Replace(x, '-');
+                });
+
                 var boxArt = value.BoxArtFile;
                 var cia = value.CiaFile;
-                var data = value.Data;
-                var directory = Path.Combine(Paths.Attachment, data.Name);
+                var directory = Path.Combine(Paths.Attachment, folder);
+
                 Filerectory.CreateDirectory(directory);
 
                 if (boxArt != null)
                 {
-
-                    var boxArtFile = Path.Combine(directory, boxArt.FileName);
-                    using (var stream = System.IO.File.Create(boxArtFile))
+                    var path = Path.Combine(directory, boxArt.FileName);
+                    using (var stream = System.IO.File.Create(path))
                     {
                         await boxArt.CopyToAsync(stream);
                     }
-                    data.BoxArtFile = boxArtFile;
+                    value.BoxArtLocalPath = path;
                 }
 
                 if (cia != null)
                 {
-                    var ciaFile = Path.Combine(directory, cia.FileName);
-                    using (var stream = System.IO.File.Create(ciaFile))
+                    var path = Path.Combine(directory, cia.FileName);
+                    using (var stream = System.IO.File.Create(path))
                     {
                         await cia.CopyToAsync(stream);
                     }
-                    data.CiaFile = ciaFile;
+                    value.CiaLocalPath = path;
                 }
 
                 var game = new GameInfo
                 {
-                    BoxArtFile = data.BoxArtFile,
-                    CiaFile = data.CiaFile,
-                    Developer = data.Developer,
-                    GameplayUrl = data.GameplayUrl,
-                    Name = data.Name,
-                    NumberOfPlayers = data.NumberOfPlayers,
-                    Publisher = data.Publisher,
-                    ReleaseDate = data.ReleaseDate,
+                    BoxArtLocalPath = value.BoxArtLocalPath,
+                    Categories = value.Categories.Select(x =>
+                    {
+                        return new CategoryInfo
+                        {
+                            Name = x.Name,
+                        };
+                    }).ToList(),
+                    CiaLocalPath = value.CiaLocalPath,
+                    Developer = value.Developer,
+                    Dlcs = value.Dlcs.Select(x =>
+                    {
+                        var file = x.CiaFile;
+                        var path = Path.Combine(directory, "Dlc", file.FileName);
+                        using (var stream = System.IO.File.Create(path))
+                        {
+                            file.CopyTo(stream);
+                        }
+                        return new DlcInfo
+                        {
+                            LocalPath = path,
+                            Name = x.Name,
+                        };
+                    }).ToList(),
+                    GameplayUrl = value.GameplayUrl,
+                    Name = value.Name,
+                    NumberOfPlayers = value.NumberOfPlayers,
+                    Publisher = value.Publisher,
+                    ReleaseDate = value.ReleaseDate,
+                    Screenshots = value.Screenshots.Select(x =>
+                    {
+                        var file = x.ScreenshotFile;
+                        var path = Path.Combine(directory, "Screenshot", file.FileName);
+                        using (var stream = System.IO.File.Create(path))
+                        {
+                            file.CopyTo(stream);
+                        }
+                        return new ScreenshotInfo
+                        {
+                            ContentType = file.ContentType,
+                            FileName = file.FileName,
+                            LocalPath = path,
+                        };
+                    }).ToList(),
                 };
 
                 await _context.Games.AddAsync(game);
@@ -161,7 +202,7 @@ namespace QrCo3ds.Controllers
 
         [HttpPut("{id}")]
         [DisableRequestSizeLimit]
-        public async Task<ActionResult<GameInfo>> Put(int id, [FromForm]GameRequest value)
+        public async Task<ActionResult<GameInfo>> Put(int id, [FromForm]GameInfo value)
         {
             try
             {
@@ -173,39 +214,47 @@ namespace QrCo3ds.Controllers
 
                 var boxArt = value.BoxArtFile;
                 var cia = value.CiaFile;
-                var data = value.Data;
-                var directory = Path.Combine(Paths.Attachment, data.Name);
+
+                var folder = value.Name;
+                Path.GetInvalidFileNameChars().ToList().ForEach(x =>
+                {
+                    folder = folder.Replace(x, '-');
+                });
+
+                var directory = Path.Combine(Paths.Attachment, folder);
                 Filerectory.CreateDirectory(directory);
 
                 if (boxArt != null)
                 {
 
-                    var boxArtFile = Path.Combine(directory, boxArt.FileName);
-                    using (var stream = System.IO.File.Create(boxArtFile))
+                    var path = Path.Combine(directory, boxArt.FileName);
+                    using (var stream = System.IO.File.Create(path))
                     {
                         await boxArt.CopyToAsync(stream);
                     }
-                    data.BoxArtFile = boxArtFile;
+                    Filerectory.DeleteFile(value.BoxArtLocalPath);
+                    value.BoxArtLocalPath = path;
                 }
 
                 if (cia != null)
                 {
-                    var ciaFile = Path.Combine(directory, cia.FileName);
-                    using (var stream = System.IO.File.Create(ciaFile))
+                    var path = Path.Combine(directory, cia.FileName);
+                    using (var stream = System.IO.File.Create(path))
                     {
                         await cia.CopyToAsync(stream);
                     }
-                    data.CiaFile = ciaFile;
+                    Filerectory.DeleteFile(value.CiaLocalPath);
+                    value.CiaLocalPath = path;
                 }
 
-                game.BoxArtFile = data.BoxArtFile;
-                game.CiaFile = data.CiaFile;
-                game.Developer = data.Developer;
-                game.GameplayUrl = data.GameplayUrl;
-                game.Name = data.Name;
-                game.NumberOfPlayers = data.NumberOfPlayers;
-                game.Publisher = data.Publisher;
-                game.ReleaseDate = data.ReleaseDate;
+                game.BoxArtFile = value.BoxArtFile;
+                game.CiaFile = value.CiaFile;
+                game.Developer = value.Developer;
+                game.GameplayUrl = value.GameplayUrl;
+                game.Name = value.Name;
+                game.NumberOfPlayers = value.NumberOfPlayers;
+                game.Publisher = value.Publisher;
+                game.ReleaseDate = value.ReleaseDate;
 
                 await _context.SaveChangesAsync();
 
@@ -229,6 +278,8 @@ namespace QrCo3ds.Controllers
                 }
                 _context.Games.Remove(game);
                 await _context.SaveChangesAsync();
+                Filerectory.DeleteFile(game.BoxArtLocalPath);
+                Filerectory.DeleteFile(game.CiaLocalPath);
                 return Ok();
             }
             catch (Exception ex)
