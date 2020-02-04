@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
 using QrCo3ds.Extensions;
 using QrCo3ds.Models;
 using QrCo3ds.Utilities;
@@ -40,9 +41,16 @@ namespace QrCo3ds.Controllers
         }
 
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<GameInfo>> Get(int id)
         {
-            return "value";
+            try
+            {
+                return await _context.Games.Include(x => x.Categories).FirstOrDefaultAsync(x => x.Id == id);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.ToInfo());
+            }
         }
 
         [HttpGet("{id}/BoxArtFile")]
@@ -105,11 +113,12 @@ namespace QrCo3ds.Controllers
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        public async Task<ActionResult<GameInfo>> Post([FromForm]GameInfo value)
+        public async Task<ActionResult<GameInfo>> Post([FromForm]GameRequest value)
         {
             try
             {
-                var folder = value.Name;
+                var data = JsonConvert.DeserializeObject<GameInfo>(value.Json);
+                var folder = data.Name;
                 Path.GetInvalidFileNameChars().ToList().ForEach(x =>
                 {
                     folder = folder.Replace(x, '-');
@@ -128,7 +137,7 @@ namespace QrCo3ds.Controllers
                     {
                         await boxArt.CopyToAsync(stream);
                     }
-                    value.BoxArtLocalPath = path;
+                    data.BoxArtLocalPath = path;
                 }
 
                 if (cia != null)
@@ -138,52 +147,40 @@ namespace QrCo3ds.Controllers
                     {
                         await cia.CopyToAsync(stream);
                     }
-                    value.CiaLocalPath = path;
+                    data.CiaLocalPath = path;
                 }
 
                 var game = new GameInfo
                 {
-                    BoxArtLocalPath = value.BoxArtLocalPath,
-                    Categories = value.Categories.Select(x =>
+                    BoxArtLocalPath = data.BoxArtLocalPath,
+                    Categories = data.Categories.Select(x =>
                     {
                         return new CategoryInfo
                         {
                             Name = x.Name,
                         };
                     }).ToList(),
-                    CiaLocalPath = value.CiaLocalPath,
-                    Developer = value.Developer,
-                    Dlcs = value.Dlcs.Select(x =>
+                    CiaLocalPath = data.CiaLocalPath,
+                    Developer = data.Developer,
+                    GameplayUrl = data.GameplayUrl,
+                    Name = data.Name,
+                    NumberOfPlayers = data.NumberOfPlayers,
+                    Publisher = data.Publisher,
+                    ReleaseDate = data.ReleaseDate,
+                    Screenshots = value.ScreenshotFiles.Select(x =>
                     {
-                        var file = x.CiaFile;
-                        var path = Path.Combine(directory, "Dlc", file.FileName);
+                        var screenshotDirectory = Path.Combine(directory, "Screenshot");
+                        Filerectory.CreateDirectory(screenshotDirectory);
+
+                        var path = Path.Combine(screenshotDirectory, x.FileName);
                         using (var stream = System.IO.File.Create(path))
                         {
-                            file.CopyTo(stream);
-                        }
-                        return new DlcInfo
-                        {
-                            LocalPath = path,
-                            Name = x.Name,
-                        };
-                    }).ToList(),
-                    GameplayUrl = value.GameplayUrl,
-                    Name = value.Name,
-                    NumberOfPlayers = value.NumberOfPlayers,
-                    Publisher = value.Publisher,
-                    ReleaseDate = value.ReleaseDate,
-                    Screenshots = value.Screenshots.Select(x =>
-                    {
-                        var file = x.ScreenshotFile;
-                        var path = Path.Combine(directory, "Screenshot", file.FileName);
-                        using (var stream = System.IO.File.Create(path))
-                        {
-                            file.CopyTo(stream);
+                            x.CopyTo(stream);
                         }
                         return new ScreenshotInfo
                         {
-                            ContentType = file.ContentType,
-                            FileName = file.FileName,
+                            ContentType = x.ContentType,
+                            FileName = x.FileName,
                             LocalPath = path,
                         };
                     }).ToList(),
@@ -202,7 +199,7 @@ namespace QrCo3ds.Controllers
 
         [HttpPut("{id}")]
         [DisableRequestSizeLimit]
-        public async Task<ActionResult<GameInfo>> Put(int id, [FromForm]GameInfo value)
+        public async Task<ActionResult<GameInfo>> Put(int id, [FromForm]GameRequest value)
         {
             try
             {
@@ -212,16 +209,17 @@ namespace QrCo3ds.Controllers
                     return BadRequest(new ExceptionInfo("That game doesn't exist.", $"GameId: {id}"));
                 }
 
-                var boxArt = value.BoxArtFile;
-                var cia = value.CiaFile;
-
-                var folder = value.Name;
+                var data = JsonConvert.DeserializeObject<GameInfo>(value.Json);
+                var folder = data.Name;
                 Path.GetInvalidFileNameChars().ToList().ForEach(x =>
                 {
                     folder = folder.Replace(x, '-');
                 });
 
+                var boxArt = value.BoxArtFile;
+                var cia = value.CiaFile;
                 var directory = Path.Combine(Paths.Attachment, folder);
+
                 Filerectory.CreateDirectory(directory);
 
                 if (boxArt != null)
@@ -232,8 +230,8 @@ namespace QrCo3ds.Controllers
                     {
                         await boxArt.CopyToAsync(stream);
                     }
-                    Filerectory.DeleteFile(value.BoxArtLocalPath);
-                    value.BoxArtLocalPath = path;
+                    Filerectory.DeleteFile(game.BoxArtLocalPath);
+                    data.BoxArtLocalPath = path;
                 }
 
                 if (cia != null)
@@ -243,18 +241,18 @@ namespace QrCo3ds.Controllers
                     {
                         await cia.CopyToAsync(stream);
                     }
-                    Filerectory.DeleteFile(value.CiaLocalPath);
-                    value.CiaLocalPath = path;
+                    Filerectory.DeleteFile(game.CiaLocalPath);
+                    data.CiaLocalPath = path;
                 }
 
-                game.BoxArtFile = value.BoxArtFile;
-                game.CiaFile = value.CiaFile;
-                game.Developer = value.Developer;
-                game.GameplayUrl = value.GameplayUrl;
-                game.Name = value.Name;
-                game.NumberOfPlayers = value.NumberOfPlayers;
-                game.Publisher = value.Publisher;
-                game.ReleaseDate = value.ReleaseDate;
+                game.BoxArtLocalPath = data.BoxArtLocalPath;
+                game.CiaLocalPath = data.CiaLocalPath;
+                game.Developer = data.Developer;
+                game.GameplayUrl = data.GameplayUrl;
+                game.Name = data.Name;
+                game.NumberOfPlayers = data.NumberOfPlayers;
+                game.Publisher = data.Publisher;
+                game.ReleaseDate = data.ReleaseDate;
 
                 await _context.SaveChangesAsync();
 
@@ -271,7 +269,7 @@ namespace QrCo3ds.Controllers
         {
             try
             {
-                var game = await _context.Games.Include(x => x.Categories).Include(x => x.Screenshots).FirstOrDefaultAsync(x => x.Id == id);
+                var game = await _context.Games.Include(x => x.Categories).Include(x => x.Dlcs).Include(x => x.Screenshots).FirstOrDefaultAsync(x => x.Id == id);
                 if (game == null)
                 {
                     return Ok();
@@ -280,6 +278,14 @@ namespace QrCo3ds.Controllers
                 await _context.SaveChangesAsync();
                 Filerectory.DeleteFile(game.BoxArtLocalPath);
                 Filerectory.DeleteFile(game.CiaLocalPath);
+                game.Dlcs.ForEach(x =>
+                {
+                    Filerectory.DeleteFile(x.LocalPath);
+                });
+                game.Screenshots.ForEach(x =>
+                {
+                    Filerectory.DeleteFile(x.LocalPath);
+                });
                 return Ok();
             }
             catch (Exception ex)

@@ -12,8 +12,5 @@ namespace QrCo3ds.Models
         public string LocalPath { get; set; } = string.Empty;
 
         public GameInfo Game { get; set; }
-
-        [NotMapped]
-        public IFormFile ScreenshotFile {get;set;}
     }
 }

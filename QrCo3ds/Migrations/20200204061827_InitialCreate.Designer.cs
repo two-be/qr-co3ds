@@ -9,7 +9,7 @@ using QrCo3ds.Models;
 namespace QrCo3ds.Migrations
 {
     [DbContext(typeof(QrCo3dsContext))]
-    [Migration("20200203192140_InitialCreate")]
+    [Migration("20200204061827_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,6 +84,9 @@ namespace QrCo3ds.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Publisher")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Region")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("ReleaseDate")

@@ -21,6 +21,7 @@
     </PackageReference>
     <PackageReference Include="Softveloper" Version="8.2.0" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.1" />
   </ItemGroup>
 
   <ItemGroup>
