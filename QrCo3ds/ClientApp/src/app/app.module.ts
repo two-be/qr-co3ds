@@ -10,20 +10,18 @@ import { NgZorroAntdModule, NZ_I18N, en_US } from "ng-zorro-antd"
 
 import { AppComponent } from "./app.component"
 import { AppService } from "./app.service"
-import { NavMenuComponent } from "./nav-menu/nav-menu.component"
-import { HomeComponent } from "./home/home.component"
-import { CounterComponent } from "./counter/counter.component"
-import { FetchDataComponent } from "./fetch-data/fetch-data.component"
+import {
+  AdminPage,
+  HomePage,
+} from "./pages"
 
 registerLocaleData(en)
 
 @NgModule({
   declarations: [
+    AdminPage,
     AppComponent,
-    NavMenuComponent,
-    HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
+    HomePage,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: "ng-cli-universal" }),
@@ -32,10 +30,9 @@ registerLocaleData(en)
     NgZorroAntdModule,
     QRCodeModule,
     RouterModule.forRoot([
-      { path: "", component: HomeComponent, pathMatch: "full" },
-      { path: "counter", component: CounterComponent },
-      { path: "fetch-data", component: FetchDataComponent },
-    ]),
+      { path: "", component: HomePage, pathMatch: "full" },
+      { path: "admin", component: AdminPage },
+    ], { useHash: true }),
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

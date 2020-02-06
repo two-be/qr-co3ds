@@ -1,0 +1,114 @@
+<nz-spin [nzSpinning]="processing">
+    <div class="bg-red" data-role="appbar" data-expand-point="md">
+        <a class="fg-white pl-2 no-hover" routerLink="/home">
+            <img src="assets/logo.png" style="width: 40px;" /> QR Co3ds
+        </a>
+    </div>
+    <div class="container pt-14">
+        <div class="card">
+            <div class="card-header">Games</div>
+            <div class="card-content p-2">
+                <div nz-row>
+                    <div nz-col nzMd="12">
+                        <button (click)="add()" nz-button nzType="primary">Add</button>
+                    </div>
+                    <div nz-col nzMd="12">
+                        <nz-input-group [nzSuffix]="suffixIconSearch">
+                            <input [(ngModel)]="keyword" (ngModelChange)="simpleSearch()" nz-input placeholder="Search.." type="text" />
+                        </nz-input-group>
+                        <ng-template #suffixIconSearch>
+                            <i nz-icon nzType="search"></i>
+                        </ng-template>
+                    </div>
+                </div>
+                <hr />
+                <nz-table #nzTable [nzData]="games">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of nzTable.data">
+                            <td class="text-center">
+                                <a class="fg-cobalt" (click)="edit(data.id)">
+                                    <i nz-icon nzType="edit" nzTheme="outline"></i>
+                                </a>
+                            </td>
+                            <td>{{data.name}}</td>
+                            <td class="text-center">
+                                <a class="fg-red">
+                                    <i nz-icon nzType="delete" nzTheme="outline"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+        </div>
+    </div>
+</nz-spin>
+<nz-drawer [nzBodyStyle]="{ height: 'calc(100% - 55px)', overflow: 'auto', 'padding-bottom': '53px' }" [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="visible" nzTitle="Create" (nzOnClose)="close()">
+    <form nz-form>
+        <div nz-row nzGutter="8">
+            <div nz-col nzSpan="12">
+                <nz-form-item>
+                    <nz-form-label>Name</nz-form-label>
+                    <nz-form-control>
+                        <input [(ngModel)]="game.name" [ngModelOptions]="ngModelOptions" nz-input />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="12">
+                <nz-form-item>
+                    <nz-form-label>Release Date</nz-form-label>
+                    <nz-form-control>
+                        <input [(ngModel)]="game.releaseDate" [ngModelOptions]="ngModelOptions" nz-input type="date" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+        <div nz-row nzGutter="8">
+            <div nz-col nzSpan="12">
+                <nz-form-item>
+                    <nz-form-label>Category</nz-form-label>
+                    <nz-form-control>
+                        <input [(ngModel)]="game.name" [ngModelOptions]="ngModelOptions" nz-input />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="12">
+                <nz-form-item>
+                    <nz-form-label>Developer</nz-form-label>
+                    <nz-form-control>
+                        <input [(ngModel)]="game.developer" [ngModelOptions]="ngModelOptions" nz-input />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+        <div nz-row nzGutter="8">
+            <div nz-col nzSpan="12">
+                <nz-form-item>
+                    <nz-form-label>Gameplay URL</nz-form-label>
+                    <nz-form-control>
+                        <input [(ngModel)]="game.gameplayUrl" [ngModelOptions]="ngModelOptions" nz-input />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="12">
+                <nz-form-item>
+                    <nz-form-label>No. of Players</nz-form-label>
+                    <nz-form-control>
+                        <input [(ngModel)]="game.developer" [ngModelOptions]="ngModelOptions" nz-input type="number" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+    </form>
+    <div class="footer">
+        <button type="button" (click)="close()" class="ant-btn" style="margin-right: 8px;"><span>Cancel</span></button>
+        <button type="button" (click)="close()" class="ant-btn ant-btn-primary"><span>Submit</span></button>
+    </div>
+</nz-drawer>

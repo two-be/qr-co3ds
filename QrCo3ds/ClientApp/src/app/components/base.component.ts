@@ -1,5 +1,6 @@
 export class BaseComponent {
 
+    ngModelOptions = { standalone: true }
     processing = false
 
     error(err) {

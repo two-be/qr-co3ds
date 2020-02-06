@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Http;
 
 namespace QrCo3ds.Models
 {
@@ -16,6 +15,7 @@ namespace QrCo3ds.Models
         public string Publisher { get; set; } = string.Empty;
         public string Region { get; set; } = string.Empty;
         public DateTime ReleaseDate { get; set; }
+        public string TagName { get; set; } = string.Empty;
 
         public List<CategoryInfo> Categories { get; set; } = new List<CategoryInfo>();
         public List<DlcInfo> Dlcs { get; set; } = new List<DlcInfo>();

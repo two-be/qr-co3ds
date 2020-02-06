@@ -13,6 +13,10 @@ export class AppService {
         return `./${route}`
     }
 
+    getGame(id: number) {
+        return this.http.get<GameInfo>(this.getApi(`${route.game}/${id}`))
+    }
+
     getGames() {
         return this.http.get<GameInfo[]>(this.getApi(route.game))
     }
@@ -21,9 +25,7 @@ export class AppService {
         let formData = new FormData()
         formData.append("boxArtFile", boxArt)
         formData.append("ciaFile", cia)
-        Object.keys(data).forEach(x => {
-            formData.append(`data.${x}`, data[x])
-        })
+        formData.append("json", JSON.stringify(data))
         let req = new HttpRequest("POST", this.getApi(route.game), formData, { reportProgress: true })
         return this.http.request(req)
     }

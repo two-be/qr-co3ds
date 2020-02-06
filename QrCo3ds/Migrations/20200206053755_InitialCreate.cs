@@ -21,7 +21,8 @@ namespace QrCo3ds.Migrations
                     NumberOfPlayers = table.Column<int>(nullable: false),
                     Publisher = table.Column<string>(nullable: true),
                     Region = table.Column<string>(nullable: true),
-                    ReleaseDate = table.Column<DateTime>(nullable: false)
+                    ReleaseDate = table.Column<DateTime>(nullable: false),
+                    TagName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

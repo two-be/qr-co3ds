@@ -15,6 +15,5 @@ namespace QrCo3ds.Models
         public IFormFile BoxArtFile { get; set; }
         public IFormFile CiaFile { get; set; }
         public string Json { get; set; }
-        public List<IFormFile> ScreenshotFiles { get; set; } = new List<IFormFile>();
     }
 }

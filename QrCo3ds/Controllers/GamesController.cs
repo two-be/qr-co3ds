@@ -45,7 +45,7 @@ namespace QrCo3ds.Controllers
         {
             try
             {
-                return await _context.Games.Include(x => x.Categories).FirstOrDefaultAsync(x => x.Id == id);
+                return await _context.Games.Include(x => x.Categories).Include(x => x.Dlcs).Include(x => x.Screenshots).FirstOrDefaultAsync(x => x.Id == id);
             }
             catch (Exception ex)
             {
@@ -101,9 +101,9 @@ namespace QrCo3ds.Controllers
                     FileName = fileName,
                     Inline = true,
                 };
-                var file = await System.IO.File.ReadAllBytesAsync(game.CiaLocalPath);
+                var stream = System.IO.File.OpenRead(game.CiaLocalPath);
                 Response.Headers.Add(HeaderNames.ContentDisposition, cd.ToString());
-                return File(file, mimeType ?? "application/octet-stream");
+                return File(stream, mimeType ?? "application/octet-stream");
             }
             catch (Exception ex)
             {
@@ -167,23 +167,6 @@ namespace QrCo3ds.Controllers
                     NumberOfPlayers = data.NumberOfPlayers,
                     Publisher = data.Publisher,
                     ReleaseDate = data.ReleaseDate,
-                    Screenshots = value.ScreenshotFiles.Select(x =>
-                    {
-                        var screenshotDirectory = Path.Combine(directory, "Screenshot");
-                        Filerectory.CreateDirectory(screenshotDirectory);
-
-                        var path = Path.Combine(screenshotDirectory, x.FileName);
-                        using (var stream = System.IO.File.Create(path))
-                        {
-                            x.CopyTo(stream);
-                        }
-                        return new ScreenshotInfo
-                        {
-                            ContentType = x.ContentType,
-                            FileName = x.FileName,
-                            LocalPath = path,
-                        };
-                    }).ToList(),
                 };
 
                 await _context.Games.AddAsync(game);
@@ -231,7 +214,7 @@ namespace QrCo3ds.Controllers
                         await boxArt.CopyToAsync(stream);
                     }
                     Filerectory.DeleteFile(game.BoxArtLocalPath);
-                    data.BoxArtLocalPath = path;
+                    game.BoxArtLocalPath = path;
                 }
 
                 if (cia != null)
@@ -242,11 +225,9 @@ namespace QrCo3ds.Controllers
                         await cia.CopyToAsync(stream);
                     }
                     Filerectory.DeleteFile(game.CiaLocalPath);
-                    data.CiaLocalPath = path;
+                    game.CiaLocalPath = path;
                 }
 
-                game.BoxArtLocalPath = data.BoxArtLocalPath;
-                game.CiaLocalPath = data.CiaLocalPath;
                 game.Developer = data.Developer;
                 game.GameplayUrl = data.GameplayUrl;
                 game.Name = data.Name;

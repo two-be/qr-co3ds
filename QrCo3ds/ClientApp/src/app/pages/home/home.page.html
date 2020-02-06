@@ -25,3 +25,6 @@
     <qrcode errorCorrectionLevel="M" [qrdata]="qrData" width="256"></qrcode>
   </nz-modal>
 </div>
+<input (change)="boxArtChange($event)" type="file" />
+<input (change)="ciaChange($event)" type="file" />
+<button (click)="upload()">Upload</button>
