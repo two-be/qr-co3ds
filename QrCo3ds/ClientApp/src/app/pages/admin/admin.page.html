@@ -59,6 +59,9 @@
                     <nz-form-control>
                         <input [(ngModel)]="game.name" [ngModelOptions]="ngModelOptions" nz-input />
                     </nz-form-control>
+                    <nz-form-explain>
+                        <label nz-checkbox [(ngModel)]="game.isLegit" [ngModelOptions]="ngModelOptions">Legit</label>
+                    </nz-form-explain>
                 </nz-form-item>
             </div>
             <div nz-col nzMd="12">

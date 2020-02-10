@@ -9,7 +9,7 @@ using QrCo3ds.Models;
 namespace QrCo3ds.Migrations
 {
     [DbContext(typeof(QrCo3dsContext))]
-    [Migration("20200209081453_InitialCreate")]
+    [Migration("20200210171435_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -82,6 +82,9 @@ namespace QrCo3ds.Migrations
 
                     b.Property<string>("GameplayUrl")
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsLegit")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");

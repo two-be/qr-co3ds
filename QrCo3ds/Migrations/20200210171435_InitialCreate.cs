@@ -17,6 +17,7 @@ namespace QrCo3ds.Migrations
                     CiaLocalPath = table.Column<string>(nullable: true),
                     Developer = table.Column<string>(nullable: true),
                     GameplayUrl = table.Column<string>(nullable: true),
+                    IsLegit = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     NumberOfPlayers = table.Column<int>(nullable: false),
                     Publisher = table.Column<string>(nullable: true),

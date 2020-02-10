@@ -25,6 +25,7 @@ export class GameInfo extends AbstractBase {
     dlcs: DlcInfo[] = []
     developer = ""
     gameplayUrl = ""
+    isLegit = false
     name = ""
     numberOfPlayers = 0
     publisher = ""

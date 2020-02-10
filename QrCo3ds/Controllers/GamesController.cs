@@ -163,6 +163,7 @@ namespace QrCo3ds.Controllers
                     CiaLocalPath = data.CiaLocalPath,
                     Developer = data.Developer,
                     GameplayUrl = data.GameplayUrl,
+                    IsLegit = data.IsLegit,
                     Name = data.Name,
                     NumberOfPlayers = data.NumberOfPlayers,
                     Publisher = data.Publisher,
@@ -231,6 +232,7 @@ namespace QrCo3ds.Controllers
 
                 game.Developer = data.Developer;
                 game.GameplayUrl = data.GameplayUrl;
+                game.IsLegit = data.IsLegit;
                 game.Name = data.Name;
                 game.NumberOfPlayers = data.NumberOfPlayers;
                 game.Publisher = data.Publisher;

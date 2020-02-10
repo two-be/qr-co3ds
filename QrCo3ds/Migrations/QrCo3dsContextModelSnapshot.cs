@@ -81,6 +81,9 @@ namespace QrCo3ds.Migrations
                     b.Property<string>("GameplayUrl")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsLegit")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
