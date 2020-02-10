@@ -54,7 +54,7 @@ namespace QrCo3ds.Controllers
         }
 
         [HttpGet("{id}/BoxArtFile")]
-        public async Task<ActionResult<GameInfo>> GetForBoxArtFile(int id)
+        public async Task<ActionResult> GetForBoxArtFile(int id)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace QrCo3ds.Controllers
         }
 
         [HttpGet("{id}/CiaFile")]
-        public async Task<ActionResult<GameInfo>> GetForCiaFile(int id)
+        public async Task<ActionResult> GetForCiaFile(int id)
         {
             try
             {
@@ -166,7 +166,9 @@ namespace QrCo3ds.Controllers
                     Name = data.Name,
                     NumberOfPlayers = data.NumberOfPlayers,
                     Publisher = data.Publisher,
+                    Region = data.Region,
                     ReleaseDate = data.ReleaseDate,
+                    TagName = string.IsNullOrEmpty(data.TagName) ? data.Name : data.TagName,
                 };
 
                 await _context.Games.AddAsync(game);
@@ -207,24 +209,23 @@ namespace QrCo3ds.Controllers
 
                 if (boxArt != null)
                 {
-
+                    Filerectory.DeleteFile(game.BoxArtLocalPath);
                     var path = Path.Combine(directory, boxArt.FileName);
                     using (var stream = System.IO.File.Create(path))
                     {
                         await boxArt.CopyToAsync(stream);
                     }
-                    Filerectory.DeleteFile(game.BoxArtLocalPath);
                     game.BoxArtLocalPath = path;
                 }
 
                 if (cia != null)
                 {
+                    Filerectory.DeleteFile(game.CiaLocalPath);
                     var path = Path.Combine(directory, cia.FileName);
                     using (var stream = System.IO.File.Create(path))
                     {
                         await cia.CopyToAsync(stream);
                     }
-                    Filerectory.DeleteFile(game.CiaLocalPath);
                     game.CiaLocalPath = path;
                 }
 
@@ -233,7 +234,9 @@ namespace QrCo3ds.Controllers
                 game.Name = data.Name;
                 game.NumberOfPlayers = data.NumberOfPlayers;
                 game.Publisher = data.Publisher;
+                game.Region = data.Region;
                 game.ReleaseDate = data.ReleaseDate;
+                game.TagName = string.IsNullOrEmpty(data.TagName) ? data.Name : data.TagName;
 
                 await _context.SaveChangesAsync();
 

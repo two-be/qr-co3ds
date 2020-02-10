@@ -4,6 +4,7 @@ import en from "@angular/common/locales/en"
 import { NgModule } from "@angular/core"
 import { FormsModule } from "@angular/forms"
 import { BrowserModule } from "@angular/platform-browser"
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations"
 import { RouterModule } from "@angular/router"
 import { QRCodeModule } from "angularx-qrcode"
 import { NgZorroAntdModule, NZ_I18N, en_US } from "ng-zorro-antd"
@@ -24,6 +25,7 @@ registerLocaleData(en)
     HomePage,
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule.withServerTransition({ appId: "ng-cli-universal" }),
     FormsModule,
     HttpClientModule,

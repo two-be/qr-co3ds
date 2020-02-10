@@ -24,6 +24,6 @@ namespace QrCo3ds.Models
         [NotMapped]
         public string BoxArtUrl => $"./games/{Id}/boxArtFile?{Guid.NewGuid().ToString("N")}";
         [NotMapped]
-        public string CiaUrl => $"./games/{Id}/CiaFile?{Guid.NewGuid().ToString("N")}";
+        public string CiaUrl => $"./games/{Id}/ciaFile?{Guid.NewGuid().ToString("N")}";
     }
 }

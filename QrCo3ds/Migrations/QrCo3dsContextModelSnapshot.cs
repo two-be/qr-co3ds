@@ -41,6 +41,12 @@ namespace QrCo3ds.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ContentType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("GameId")
                         .HasColumnType("INTEGER");
 

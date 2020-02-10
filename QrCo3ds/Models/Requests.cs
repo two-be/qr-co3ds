@@ -7,7 +7,7 @@ namespace QrCo3ds.Models
     public class DlcRequest
     {
         public IFormFile CiaFile { get; set; }
-        public DlcInfo Data { get; set; }
+        public string Json { get; set; }
     }
 
     public class GameRequest

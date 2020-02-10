@@ -88,14 +88,15 @@
 }
 
 .footer {
-    position: absolute;
-    bottom: 0px;
-    width: 100%;
-    border-top: 1px solid rgb(232, 232, 232);
-    padding: 10px 16px;
-    text-align: right;
-    left: 0px;
     background: #fff;
+    border-top: 1px solid rgb(232, 232, 232);
+    bottom: 0px;
+    left: 0px;
+    padding: 10px 16px;
+    position: absolute;
+    text-align: right;
+    width: 100%;
+    z-index: 2;
 }
 
 html {
@@ -119,6 +120,10 @@ html {
 
 ::ng-deep .vertical-center-modal .ant-modal {
     top: 0;
+}
+
+[nz-carousel-content] {
+    background: black;
 }
 
 .relative {

@@ -9,7 +9,7 @@ using QrCo3ds.Models;
 namespace QrCo3ds.Migrations
 {
     [DbContext(typeof(QrCo3dsContext))]
-    [Migration("20200206053755_InitialCreate")]
+    [Migration("20200209081453_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,6 +42,12 @@ namespace QrCo3ds.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("ContentType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("GameId")
                         .HasColumnType("INTEGER");

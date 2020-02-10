@@ -2,6 +2,11 @@ export class BaseComponent {
 
     ngModelOptions = { standalone: true }
     processing = false
+    visible = false
+
+    close() {
+        this.visible = false
+    }
 
     error(err) {
         if (err.error && err.error.message) {
@@ -11,6 +16,10 @@ export class BaseComponent {
         }
         console.error(err)
         this.setProcessing(false)
+    }
+
+    open() {
+        this.visible = true
     }
 
     setProcessing(value: boolean) {

@@ -55,6 +55,8 @@ namespace QrCo3ds.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    ContentType = table.Column<string>(nullable: true),
+                    FileName = table.Column<string>(nullable: true),
                     GameId = table.Column<int>(nullable: false),
                     LocalPath = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true)

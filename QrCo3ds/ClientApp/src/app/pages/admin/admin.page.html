@@ -39,7 +39,7 @@
                             </td>
                             <td>{{data.name}}</td>
                             <td class="text-center">
-                                <a class="fg-red">
+                                <a class="fg-red" (click)="delete(data)">
                                     <i nz-icon nzType="delete" nzTheme="outline"></i>
                                 </a>
                             </td>
@@ -53,7 +53,7 @@
 <nz-drawer [nzBodyStyle]="{ height: 'calc(100% - 55px)', overflow: 'auto', 'padding-bottom': '53px' }" [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="visible" nzTitle="Create" (nzOnClose)="close()">
     <form nz-form>
         <div nz-row nzGutter="8">
-            <div nz-col nzSpan="12">
+            <div nz-col nzMd="12">
                 <nz-form-item>
                     <nz-form-label>Name</nz-form-label>
                     <nz-form-control>
@@ -61,25 +61,37 @@
                     </nz-form-control>
                 </nz-form-item>
             </div>
-            <div nz-col nzSpan="12">
+            <div nz-col nzMd="12">
                 <nz-form-item>
-                    <nz-form-label>Release Date</nz-form-label>
+                    <nz-form-label>Box Art</nz-form-label>
                     <nz-form-control>
-                        <input [(ngModel)]="game.releaseDate" [ngModelOptions]="ngModelOptions" nz-input type="date" />
+                        <input accept="image/*" (change)="boxArtChange($event)" data-role="file" type="file" />
                     </nz-form-control>
                 </nz-form-item>
             </div>
         </div>
         <div nz-row nzGutter="8">
-            <div nz-col nzSpan="12">
+            <div nz-col nzMd="12">
                 <nz-form-item>
                     <nz-form-label>Category</nz-form-label>
                     <nz-form-control>
-                        <input [(ngModel)]="game.name" [ngModelOptions]="ngModelOptions" nz-input />
+                        <nz-select [(ngModel)]="selectedCategories" (ngModelChange)="categoryChange($event)" [ngModelOptions]="ngModelOptions" nzAllowClear nzMode="multiple" nzShowSearch>
+                            <nz-option *ngFor="let option of categories" [nzLabel]="option" [nzValue]="option"></nz-option>
+                        </nz-select>
                     </nz-form-control>
                 </nz-form-item>
             </div>
-            <div nz-col nzSpan="12">
+            <div nz-col nzMd="12">
+                <nz-form-item>
+                    <nz-form-label>Cia</nz-form-label>
+                    <nz-form-control>
+                        <input accept=".cia" (change)="ciaChange($event)" data-role="file" type="file" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+        <div nz-row nzGutter="8">
+            <div nz-col nzMd="12">
                 <nz-form-item>
                     <nz-form-label>Developer</nz-form-label>
                     <nz-form-control>
@@ -87,9 +99,7 @@
                     </nz-form-control>
                 </nz-form-item>
             </div>
-        </div>
-        <div nz-row nzGutter="8">
-            <div nz-col nzSpan="12">
+            <div nz-col nzMd="12">
                 <nz-form-item>
                     <nz-form-label>Gameplay URL</nz-form-label>
                     <nz-form-control>
@@ -97,18 +107,137 @@
                     </nz-form-control>
                 </nz-form-item>
             </div>
-            <div nz-col nzSpan="12">
+        </div>
+        <div nz-row nzGutter="8">
+            <div nz-col nzMd="12">
                 <nz-form-item>
                     <nz-form-label>No. of Players</nz-form-label>
                     <nz-form-control>
-                        <input [(ngModel)]="game.developer" [ngModelOptions]="ngModelOptions" nz-input type="number" />
+                        <input [(ngModel)]="game.numberOfPlayers" [ngModelOptions]="ngModelOptions" nz-input type="number" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzMd="12">
+                <nz-form-item>
+                    <nz-form-label>Publisher</nz-form-label>
+                    <nz-form-control>
+                        <input [(ngModel)]="game.publisher" [ngModelOptions]="ngModelOptions" nz-input />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+        <div nz-row nzGutter="8">
+            <div nz-col nzMd="12">
+                <nz-form-item>
+                    <nz-form-label>Region</nz-form-label>
+                    <nz-form-control>
+                        <nz-select [(ngModel)]="game.region" [ngModelOptions]="ngModelOptions" nzAllowClear nzShowSearch>
+                            <nz-option *ngFor="let option of regions" [nzLabel]="option" [nzValue]="option"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzMd="12">
+                <nz-form-item>
+                    <nz-form-label>Release Date</nz-form-label>
+                    <nz-form-control>
+                        <nz-date-picker class="w-100" [(ngModel)]="game.releaseDate" [ngModelOptions]="ngModelOptions"></nz-date-picker>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+        <div nz-row nzGutter="8">
+            <div nz-col nzMd="12">
+                <nz-form-item>
+                    <nz-form-label>Screenshots</nz-form-label>
+                    <nz-form-control>
+                        <input accept="image/*" (change)="screenshotsChange($event)" data-role="file" multiple type="file" />
+                    </nz-form-control>
+                    <nz-form-explain>
+                        <div *ngFor="let data of game.screenshots">
+                            <i nz-icon nzType="paper-clip" nzTheme="outline"></i>
+                            <a class="fg-cobalt" [href]="data.fileUrl" target="_blank"> {{data.fileName}} </a>
+                            <a (click)="deleteScreenshot(data)">
+                                <i nz-icon nzType="delete"></i>
+                            </a>
+                        </div>
+                    </nz-form-explain>
+                </nz-form-item>
+            </div>
+            <div nz-col nzMd="12">
+                <nz-form-item>
+                    <nz-form-label>TagName</nz-form-label>
+                    <nz-form-control>
+                        <input [(ngModel)]="game.tagName" [ngModelOptions]="ngModelOptions" nz-input />
                     </nz-form-control>
                 </nz-form-item>
             </div>
         </div>
     </form>
+    <nz-divider nzOrientation="left" nzText="DLC & Update"></nz-divider>
+    <form nz-form>
+        <div nz-row nzGutter="8">
+            <div nz-col nzMd="9">
+                <nz-form-item>
+                    <nz-form-label>Name</nz-form-label>
+                    <nz-form-control>
+                        <input [(ngModel)]="dlc.name" [ngModelOptions]="ngModelOptions" nz-input />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzMd="9">
+                <nz-form-item>
+                    <nz-form-label>File</nz-form-label>
+                    <nz-form-control>
+                        <input (change)="dlcFileChange($event)" data-role="file" type="file" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzMd="6">
+                <nz-form-item>
+                    <nz-form-label></nz-form-label>
+                    <nz-form-control>
+                        <button (click)="saveDlc()" nz-button nzType="primary">Save</button>
+                        <button nz-button>Cancel</button>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+    </form>
+    <hr />
+    <nz-table #dlcTable [nzData]="dlcs" nzFrontPagination="false">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>File</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of dlcs">
+                <td class="text-center">
+                    <a class="fg-cobalt" (click)="editDlc(data)">
+                        <i nz-icon nzType="edit" nzTheme="outline"></i>
+                    </a>
+                </td>
+                <td>{{data.name}}</td>
+                <td>{{data.fileName}}</td>
+                <td class="text-center">
+                    <a class="fg-red" (click)="deleteDlc(data)">
+                        <i nz-icon nzType="delete" nzTheme="outline"></i>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
     <div class="footer">
         <button type="button" (click)="close()" class="ant-btn" style="margin-right: 8px;"><span>Cancel</span></button>
-        <button type="button" (click)="close()" class="ant-btn ant-btn-primary"><span>Submit</span></button>
+        <button type="button" (click)="save()" class="ant-btn ant-btn-primary"><span>Submit</span></button>
     </div>
 </nz-drawer>
+<nz-modal nzClosable="false" [nzFooter]="null" nzMaskClosable="false" [(nzVisible)]="isVisible">
+    <div class="ml-auto mr-auto" data-role="activity" data-type="ring" data-style="color"></div>
+    <nz-progress [nzPercent]="percent" [nzStrokeColor]="{ '0%': '#108ee9', '100%': '#87d068' }"></nz-progress>
+    <div class="fg-darkGray text-center">{{progressMessage}}</div>
+</nz-modal>

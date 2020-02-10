@@ -11,5 +11,8 @@ namespace QrCo3ds.Models
         public string LocalPath { get; set; } = string.Empty;
 
         public GameInfo Game { get; set; }
+
+        [NotMapped]
+        public string FileUrl => $"./screenshots/{Id}/file?{Guid.NewGuid().ToString("N")}";
     }
 }
