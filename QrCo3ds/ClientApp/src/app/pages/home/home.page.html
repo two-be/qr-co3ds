@@ -11,7 +11,7 @@
 </div>
 <nz-spin [nzSpinning]="processing">
   <div class="p-2 pt-14" nz-row nzGutter="8">
-    <div *ngFor="let data of games" nz-col nzMd="4">
+    <div class="animated fadeIn" *ngFor="let data of games" nz-col nzMd="4">
       <div class="card image-header">
         <div class="card-header fg-white" [style.background-image]="'url(' + data.boxArtUrl + ')'">
           <a class="fg-white" (click)="showInfo(data)" style="text-shadow: 2px 2px 4px #000000;">{{data.name}}</a>
