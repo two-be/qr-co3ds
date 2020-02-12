@@ -32,7 +32,7 @@ namespace QrCo3ds.Controllers
         {
             try
             {
-                return await _context.Games.OrderBy(x => x.ReleaseDate).ToListAsync();
+                return await _context.Games.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Name).ToListAsync();
             }
             catch (Exception ex)
             {

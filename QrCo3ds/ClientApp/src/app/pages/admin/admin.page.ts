@@ -24,6 +24,7 @@ export class AdminPage extends BaseComponent implements OnInit {
         "Indie",
         "Music",
         "Party",
+        "Platformer",
         "Puzzle",
         "Racing",
         "Role-Playing",
@@ -57,6 +58,8 @@ export class AdminPage extends BaseComponent implements OnInit {
     }
 
     add() {
+        this.boxArtFile = undefined
+        this.ciaFile = undefined
         this.dlc = new DlcInfo()
         this.dlcs = []
         this.game = new GameInfo()
