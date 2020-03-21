@@ -20,6 +20,7 @@ export class AdminPage extends BaseComponent implements OnInit {
         "Adventure",
         "Application",
         "Education",
+        "Fighting",
         "First-Person",
         "Fitness",
         "Indie",
