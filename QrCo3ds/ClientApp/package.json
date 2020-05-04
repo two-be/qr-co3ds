@@ -25,7 +25,7 @@
     "angularx-qrcode": "^2.1.0",
     "aspnet-prerendering": "^3.0.1",
     "core-js": "^3.3.3",
-    "jquery": "3.4.1",
+    "jquery": "3.5.0",
     "metro4-dist": "^4.3.4",
     "moment": "^2.24.0",
     "ng-zorro-antd": "^8.5.2",
