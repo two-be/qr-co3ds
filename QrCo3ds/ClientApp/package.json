@@ -27,7 +27,7 @@
     "core-js": "^3.3.3",
     "jquery": "3.5.0",
     "metro4-dist": "^4.3.4",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "ng-zorro-antd": "^8.5.2",
     "numeral": "^2.0.6",
     "oidc-client": "^1.9.1",
